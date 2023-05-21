@@ -1,8 +1,8 @@
 ﻿namespace N5.Challenge.Api.Infraestructure
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
-        void Commit();
-        IRepository<T> GetRepository<T>() where T : class;
+        IRepository Repository();
+        Task<int> CommitAsync(CancellationToken cancellationToken);
     }
 }

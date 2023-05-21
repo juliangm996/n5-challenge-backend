@@ -1,22 +1,22 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace N5.Challenge.Api.Infraestructure.Entities
 {
-    public class Permissions
+    public record Permissions : IEntity
     {
-        public int Id { get; set; }
 
         [StringLength(80, MinimumLength = 4)]
-        public string NombreEmpleado { get; set; }
+        public string NombreEmpleado { get; init; }
 
         [StringLength(80, MinimumLength = 4)]
-        public string ApellidoEmpleado { get; set; }
-        public int TipoPermiso { get; set; }
-        public DateTime FechaPermio { get; set; }
+        public string ApellidoEmpleado { get; init; }
+        public int TipoPermiso { get; init; }
+        public DateTime FechaPermio { get; init; }
 
         //Relation tables
-        public virtual PermissionTypes PermissionTypes { get; set; }
+        public virtual PermissionTypes PermissionTypes { get; init; }
 
     }
 }

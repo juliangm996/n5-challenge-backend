@@ -2,64 +2,39 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+using N5.Challenge.Api.Infraestructure.Entities;
 
-namespace N5.Challenge.Api.Data
+namespace N5.Challenge.Api.Infraestructure
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository : IRepository
     {
-        private readonly DbSet<T> objectSet;
-        private readonly DataContext context;
-        public Repository(DataContext context)
+        private readonly IDataContext _context;
+
+        public Repository(IDataContext context)
         {
-            objectSet = context.Set<T>();
-            this.context = context;
-        }
-        public void Add(T entity)
-        {
-            objectSet.Add(entity);
+            _context = context;
         }
 
-        public void AddRange(ICollection<T> entities)
+        public Task<List<T>> FindListAsync<T>(Expression<Func<T, bool>>? expression, Func<IQueryable<T>,
+          IOrderedQueryable<T>>? orderBy = null, CancellationToken cancellationToken = default)
+          where T : class
         {
-            objectSet.AddRange(entities);
+            var query = expression != null ? _context.Set<T>().Where(expression) : _context.Set<T>();
+            return orderBy != null
+                ? orderBy(query).ToListAsync(cancellationToken)
+                : query.ToListAsync(cancellationToken);
         }
 
-        public IQueryable<T> Find(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        public T Add<T>(T entity) where T : IEntity
         {
-            if (includeProperties == null || !includeProperties.Any())
-            {
-                return objectSet.Where(predicate);
-            }
-
-            IQueryable<T> queryable = includeProperties.Aggregate(objectSet.AsQueryable(), (current, includeProperty) => current.Include(includeProperty));
-
-            return queryable.Where(predicate);
+            return _context.Set<T>().Add(entity).Entity;
         }
 
-        public T FindById(params object[] keyValues)
+        public void Update<T>(T entity) where T : IEntity
         {
-            return objectSet.Find(keyValues);
+            _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public IQueryable<T> GetAllAsQueryable(Func<IQueryable<T>, IIncludableQueryable<T, object>> include)
-        {
-            IQueryable<T> queryable = objectSet.AsQueryable<T>();
-            return include(queryable).AsNoTracking();
-        }
 
-        public IQueryable<T> GetAllAsQueryable()
-        {
-            return objectSet.AsQueryable<T>();
-        }
-
-        public void Remove(T entity)
-        {
-            objectSet.Remove(entity);
-        }
-
-        public void RemoveRange(ICollection<T> entities)
-        {
-            objectSet.RemoveRange(entities);
-        }
     }
 }

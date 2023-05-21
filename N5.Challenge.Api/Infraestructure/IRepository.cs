@@ -1,17 +1,12 @@
 ﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Query;
+using N5.Challenge.Api.Infraestructure.Entities;
 
-namespace N5.Challenge.Api.Data
+namespace N5.Challenge.Api.Infraestructure
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository
     {
-        void Add(T entity);
-        void AddRange(ICollection<T> entities);
-        IQueryable<T> Find(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
-        T FindById(params object[] keyValues);
-        IQueryable<T> GetAllAsQueryable(Func<IQueryable<T>, IIncludableQueryable<T, object>> include);
-        IQueryable<T> GetAllAsQueryable();
-        void Remove(T entity);
-        void RemoveRange(ICollection<T> entities);
+        T Add<T>(T entity) where T : IEntity;
+        Task<List<T>> FindListAsync<T>(Expression<Func<T, bool>>? expression, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, CancellationToken cancellationToken = default) where T : class;
+        void Update<T>(T entity) where T : IEntity;
     }
 }

@@ -1,33 +1,45 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
+
 namespace N5.Challenge.Api.Infraestructure
 {
-    public class UnitOfWork
+    public class UnitOfWork :IUnitOfWork
     {
-        private DataContext DatabaseContext { get; set; }
+        private readonly IDataContext _context;
+        private bool _disposed;
 
-        private readonly Dictionary<string, object> repositories = new Dictionary<string, object>();
-
-        public UnitOfWork(DataContext databaseContext)
+        public UnitOfWork(IDataContext context)
         {
-            DatabaseContext = databaseContext;
-        }
-        public void Commit()
-        {
-            DatabaseContext.SaveChanges();
-            repositories.Clear();
+            _context = context;
         }
 
-        public IRepository<T> GetRepository<T>() where T : class
+        public void Dispose()
         {
-            string typeName = typeof(T).Name;
-            if (repositories.Keys.Contains(typeName))
-            {
-                return repositories[typeName] as IRepository<T>;
-            }
-            IRepository<T> newRepository = new Repository<T>(DatabaseContext);
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            repositories.Add(typeName, newRepository);
-            return newRepository;
+        public IRepository Repository()
+        {
+            return new Repository(_context);
+        }
+
+        public Task<int> CommitAsync(CancellationToken cancellationToken)
+        {
+            return _context.SaveChangesAsync(cancellationToken);
+        }
+
+        ~UnitOfWork()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+                if (disposing)
+                    _context.Dispose();
+            _disposed = true;
         }
     }
 }

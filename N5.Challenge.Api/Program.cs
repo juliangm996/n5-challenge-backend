@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using N5.Challenge.Api.Data;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using N5.Challenge.Api.Infraestructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(o => o.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<IDataContext, DataContext>();
+
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
