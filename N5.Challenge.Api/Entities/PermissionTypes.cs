@@ -13,8 +13,6 @@ namespace N5.Challenge.Api.Entities
         //Relation tables
         public virtual ICollection<Permissions>? Permissions { get; init; }
 
-        [Text(Analyzer = "spanish")]
-        public string? DescripcionElasticsearch { get; set; }
     }
 }
 

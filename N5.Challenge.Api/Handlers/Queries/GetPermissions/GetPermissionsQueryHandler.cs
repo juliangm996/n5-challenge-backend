@@ -6,7 +6,7 @@ using N5.Challenge.Api.Kafka;
 using N5.Challenge.Api.Repositories;
 using N5.Challenge.Api.Resources;
 
-namespace N5.Challenge.Api.Handlers.Queries
+namespace N5.Challenge.Api.Handlers.Queries.GetPermissions
 {
     public class GetPermissionsQueryHandler : IRequestHandler<GetPermissionsQuery, ErrorOr<IEnumerable<PermissionResource>>>
     {

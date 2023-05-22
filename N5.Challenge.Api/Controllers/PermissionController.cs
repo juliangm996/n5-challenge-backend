@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using N5.Challenge.Api.Handlers.Commands.ModifyPermissions;
 using N5.Challenge.Api.Handlers.Commands.RequestPermisssions;
 using N5.Challenge.Api.Handlers.Queries;
+using N5.Challenge.Api.Handlers.Queries.GetPermissions;
 using N5.Challenge.Api.Resources;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860

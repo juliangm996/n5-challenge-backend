@@ -7,7 +7,7 @@ using N5.Challenge.Api.Repositories;
 using N5.Challenge.Test;
 
 [TestClass]
-public class RepositoryTests : BaseTest
+public class RepositoryUnitTests : BaseTest
 {
     [TestMethod]
     public async Task FindAllAsync()

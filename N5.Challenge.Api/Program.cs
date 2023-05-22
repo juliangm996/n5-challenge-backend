@@ -43,8 +43,20 @@ builder.Services.AddSingleton<ProblemDetailsFactory, N5ChallengeProblemDetailsFa
 builder.Services.AddSingleton<KafkaProducer>();
 
 
+builder.Services.AddCors(o =>
+{
+    o.AddDefaultPolicy(b =>
+    {
+        b.AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowAnyOrigin();
+    });
+});
+
 
 WebApplication app = builder.Build();
+
+app.UseCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
