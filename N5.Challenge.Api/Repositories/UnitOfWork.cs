@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using N5.Challenge.Api.Persistence;
 
-namespace N5.Challenge.Api.Infraestructure
+namespace N5.Challenge.Api.Repositories
 {
-    public class UnitOfWork :IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly IDataContext _context;
         private bool _disposed;

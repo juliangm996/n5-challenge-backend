@@ -1,4 +1,4 @@
-﻿namespace N5.Challenge.Api.Infraestructure
+﻿namespace N5.Challenge.Api.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {

@@ -1,57 +1,71 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Azure.Core;
+using ErrorOr;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using N5.Challenge.Api.Domain.QueryHandler;
+using N5.Challenge.Api.Handlers.Commands.ModifyPermissions;
+using N5.Challenge.Api.Handlers.Commands.RequestPermisssions;
+using N5.Challenge.Api.Handlers.Queries;
+using N5.Challenge.Api.Resources;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace N5.Challenge.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class PermissionController : Controller
+    [ApiController]
+    public class PermissionController : ApiController
     {
 
-        private readonly PermissionQueryHandler permissionQueryHandler;
+        private readonly ISender _mediator;
 
-        public PermissionController(PermissionQueryHandler permissionQueryHandler)
+        public PermissionController(ISender mediator)
         {
-            this.permissionQueryHandler = permissionQueryHandler;
+            _mediator = mediator;
         }
 
 
         [HttpGet]
         [Route("[action]")]
-        public IActionResult GetPermissions()
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ErrorOr.ErrorOr))]
+        public async Task<IActionResult> GetPermissions()
         {
-            return Ok(permissionQueryHandler.GetPermissions());
+            var query = new GetPermissionsQuery();
+            var result = await _mediator.Send(query);
+            return result.Match(resp => StatusCode((int)HttpStatusCode.OK, resp),
+                errors => Problem(errors));
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("[action]")]
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ErrorOr.ErrorOr))]
+        public async Task<IActionResult> RequestPermissions([FromBody] RequestPermissionCommand request)
         {
+            var result = await _mediator.Send(request);
+            return result.Match(resp => StatusCode((int)HttpStatusCode.OK, resp),
+                errors => Problem(errors));
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+
+        [HttpPut]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ErrorOr.ErrorOr))]
+        public async Task<IActionResult> ModifyPermission([FromBody] ModifyPermissionCommand request)
         {
+            var result = await _mediator.Send(request);
+            return result.Match(resp => StatusCode((int)HttpStatusCode.OK, resp),
+                errors => Problem(errors));
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        
     }
 }
 

@@ -2,9 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
-using N5.Challenge.Api.Infraestructure.Entities;
+using N5.Challenge.Api.Persistence;
+using N5.Challenge.Api.Entities;
 
-namespace N5.Challenge.Api.Infraestructure
+namespace N5.Challenge.Api.Repositories
 {
     public class Repository : IRepository
     {
@@ -15,14 +16,10 @@ namespace N5.Challenge.Api.Infraestructure
             _context = context;
         }
 
-        public Task<List<T>> FindListAsync<T>(Expression<Func<T, bool>>? expression, Func<IQueryable<T>,
-          IOrderedQueryable<T>>? orderBy = null, CancellationToken cancellationToken = default)
+        public Task<List<T>> FindAllAsync<T>(CancellationToken cancellationToken = default)
           where T : class
         {
-            var query = expression != null ? _context.Set<T>().Where(expression) : _context.Set<T>();
-            return orderBy != null
-                ? orderBy(query).ToListAsync(cancellationToken)
-                : query.ToListAsync(cancellationToken);
+            return _context.Set<T>().ToListAsync(cancellationToken);
         }
 
         public T Add<T>(T entity) where T : IEntity
@@ -35,6 +32,10 @@ namespace N5.Challenge.Api.Infraestructure
             _context.Entry(entity).State = EntityState.Modified;
         }
 
+        public async Task<T?> GetById<T>(int id) where T : IEntity
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
 
     }
 }

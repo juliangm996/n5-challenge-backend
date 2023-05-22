@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using N5.Challenge.Api.Infraestructure.Entities;
-using N5.Challenge.Api.Infraestructure.Resources;
+using N5.Challenge.Api.Entities;
+using N5.Challenge.Api.Resources;
 
 namespace N5.Challenge.Api.Mapper
 {
