@@ -3,6 +3,7 @@ using Elasticsearch.Net;
 using ErrorOr;
 using MediatR;
 using N5.Challenge.Api.Entities;
+using N5.Challenge.Api.Kafka;
 using N5.Challenge.Api.Repositories;
 using N5.Challenge.Api.Resources;
 using Nest;
@@ -14,12 +15,15 @@ namespace N5.Challenge.Api.Handlers.Commands.ModifyPermissions
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IElasticClient _elastic;
+        private readonly KafkaProducer _kafkaProducer;
 
-        public ModifyPermissionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,IElasticClient elastic)
+
+        public ModifyPermissionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,IElasticClient elastic, KafkaProducer kafkaProducer)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _elastic = elastic;
+            _kafkaProducer = kafkaProducer;
         }
 
         public async Task<ErrorOr<PermissionResource>> Handle(ModifyPermissionCommand request, CancellationToken cancellation)
@@ -49,6 +53,8 @@ namespace N5.Challenge.Api.Handlers.Commands.ModifyPermissions
                 return default;
             */
             await _unitOfWork.CommitAsync(cancellation);
+            await _kafkaProducer.PublishPermissionOperationAsync("modify");
+
 
             return _mapper.Map<PermissionResource>(permission);
 

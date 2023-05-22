@@ -2,6 +2,7 @@
 using ErrorOr;
 using MediatR;
 using N5.Challenge.Api.Entities;
+using N5.Challenge.Api.Kafka;
 using N5.Challenge.Api.Repositories;
 using N5.Challenge.Api.Resources;
 using Nest;
@@ -13,12 +14,16 @@ namespace N5.Challenge.Api.Handlers.Commands.RequestPermisssions
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IElasticClient _elasticClient;
+        private readonly KafkaProducer _kafkaProducer;
 
-        public RequestPermissionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IElasticClient elasticClient)
+
+        public RequestPermissionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IElasticClient elasticClient, KafkaProducer kafkaProducer)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _elasticClient = elasticClient;
+            _kafkaProducer = kafkaProducer;
+
         }
 
         public async Task<ErrorOr<PermissionResource>> Handle(RequestPermissionCommand request, CancellationToken cancellationToken)
@@ -37,6 +42,9 @@ namespace N5.Challenge.Api.Handlers.Commands.RequestPermisssions
                return default;
             */
             await _unitOfWork.CommitAsync(cancellationToken);
+
+            await _kafkaProducer.PublishPermissionOperationAsync("request");
+
             return _mapper.Map<PermissionResource>(permission);
         }
     }

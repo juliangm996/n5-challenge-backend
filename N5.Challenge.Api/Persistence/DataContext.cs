@@ -8,6 +8,8 @@ namespace N5.Challenge.Api.Persistence
 {
     public class DataContext : DbContext, IDataContext
     {
+        public DbSet<Permissions> Permissions { get; set; }
+        public DbSet<PermissionTypes> PermissionTypes { get; set; }
 
         public ElasticClient ElasticClient { get;}
         public DataContext(DbContextOptions<DataContext> options) : base(options)
@@ -29,7 +31,7 @@ namespace N5.Challenge.Api.Persistence
         {
             modelBuilder.Entity<Permissions>(entity =>
             {
-                entity.ToTable("Permissions");
+               
                 entity.HasKey(e => e.Id);
                 entity.HasOne(e => e.PermissionTypes)
                 .WithMany(e => e.Permissions)
@@ -42,7 +44,7 @@ namespace N5.Challenge.Api.Persistence
 
             modelBuilder.Entity<PermissionTypes>(entity =>
             {
-                entity.ToTable("PermissionTypes");
+              
                 entity.HasKey(e => e.Id);
             });
 

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 25.0.1705.5
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N5.Challenge.Api", "N5.Challenge.Api\N5.Challenge.Api.csproj", "{B10EA3A6-9B7F-43DC-8317-CF5C9095522D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "N5.Challenge.Api", "N5.Challenge.Api\N5.Challenge.Api.csproj", "{B10EA3A6-9B7F-43DC-8317-CF5C9095522D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N5.Challenge.Test", "N5.Challenge.Test\N5.Challenge.Test.csproj", "{9789C9BF-87F3-434A-B1B1-D07AEF4C874C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B10EA3A6-9B7F-43DC-8317-CF5C9095522D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B10EA3A6-9B7F-43DC-8317-CF5C9095522D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B10EA3A6-9B7F-43DC-8317-CF5C9095522D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9789C9BF-87F3-434A-B1B1-D07AEF4C874C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9789C9BF-87F3-434A-B1B1-D07AEF4C874C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9789C9BF-87F3-434A-B1B1-D07AEF4C874C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9789C9BF-87F3-434A-B1B1-D07AEF4C874C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
